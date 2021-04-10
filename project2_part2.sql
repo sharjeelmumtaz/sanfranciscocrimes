@@ -42,12 +42,21 @@ OWED_Public_Spaces_2_2 VARCHAR(255),
 Neighborhoods_2 VARCHAR(255)
 );
 
-LOAD DATA INFILE 'c:\\wamp64\\tmp\\police-department-incidents.csv'
-INTO TABLE megatable
+# SHOW VARIABLES LIKE "secure_file_priv";
+
+# LOAD DATA INFILE 'c:\\wamp64\\tmp\\police-department-incidents.csv'
+LOAD DATA
+    LOCAL INFILE '/Users/jonny/Documents/School/DBMS/project 2/police-department-incidents.csv'
+    INTO TABLE megatable 
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES;
+
+SELECT * FROM megatable
+ORDER BY PdId
+LIMIT 30;
+
 
 
 
