@@ -49,27 +49,27 @@
       $daySelected = "Sunday";
     }
     if (isset($_POST['fmonday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 2");
+      $result = get_query("CALL getCrimesByDay(:day)", "Monday");
       $daySelected = "Monday";
     }
     if (isset($_POST['ftuesday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 3");
+      $result = get_query("CALL getCrimesByDay(:day)", "Tuesday");
       $daySelected = "Tuesday";
     }
     if (isset($_POST['fwednesday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 4");
+      $result = get_query("CALL getCrimesByDay(:day)", "Wednesday");
       $daySelected = "Wednesday";
     }
     if (isset($_POST['fthursday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 5");
+      $result = get_query("CALL getCrimesByDay(:day)", "Thursday");
       $daySelected = "Thursday";
     }
     if (isset($_POST['ffriday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 6");
+      $result = get_query("CALL getCrimesByDay(:day)", "Friday");
       $daySelected = "Friday";
     }
     if (isset($_POST['fsaturday'])){
-      $result = get_query("SELECT * FROM megatable LIMIT 7");
+      $result = get_query("CALL getCrimesByDay(:day)", "Saturday");
       $daySelected = "Saturday";
     }
 
