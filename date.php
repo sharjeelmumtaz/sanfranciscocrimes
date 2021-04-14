@@ -4,10 +4,10 @@
     return true;
   }
 
-  function get_query($query, $var_day){
+  function get_query($query, $var){
 
     require_once("conn.php");
-
+    
     $result = "unexecuted";
 
     try
@@ -15,7 +15,7 @@
       // Create a prepared statement. Prepared statements are a way to eliminate SQL INJECTION.
       $prepared_stmt = $dbo->prepare($query);
 
-      $prepared_stmt->bindValue(':day', $var_day, PDO::PARAM_STR);
+      $prepared_stmt->bindValue(':date', $var, PDO::PARAM_STR);
 
       $prepared_stmt->execute();
       // Fetch all the values based on query and save that to variable $result
@@ -32,45 +32,37 @@
 
 
 // Runs upon init. Stuff needs to be defined in here to work.
+  $init_run = false; 
 
-  if (!defined($init_run)){
+  if (!$init_run){
     ini_set('display_errors', 1);
     ini_set('display_startup_errors', 1);
     error_reporting(E_ALL);
 
-    $init_run = false;
     $init_run = init();
 
-    $daySelected = "none";
-    $dd = 0;
+    $var_day = "";
+    $var_month = "";
+    $var_year = "";
 
-    if (isset($_POST['fsunday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Sunday");
-      $daySelected = "Sunday";
-    }
-    if (isset($_POST['fmonday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Monday");
-      $daySelected = "Monday";
-    }
-    if (isset($_POST['ftuesday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Tuesday");
-      $daySelected = "Tuesday";
-    }
-    if (isset($_POST['fwednesday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Wednesday");
-      $daySelected = "Wednesday";
-    }
-    if (isset($_POST['fthursday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Thursday");
-      $daySelected = "Thursday";
-    }
-    if (isset($_POST['ffriday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Friday");
-      $daySelected = "Friday";
-    }
-    if (isset($_POST['fsaturday'])){
-      $result = get_query("CALL getCrimesByDay(:day)", "Saturday");
-      $daySelected = "Saturday";
+    $submitted = false;
+
+    if (isset($_POST['field_submit'])){
+      $submitted = true;
+
+      $var_day = $_POST["day"];
+      $var_month = $_POST["month"];
+      $var_year = $_POST["year"];
+
+      $total_date = $var_year . "-" . $var_month . "-" . $var_day;
+
+      $validEntry = false;
+      if (strlen($var_day) == 2 && strlen($var_month) == 2 && strlen($var_year) == 4){
+        $validEntry = true;
+      }
+      if ($validEntry){
+        $result = get_query("CALL getCrimesByDate(:date)", $total_date);
+      }
     }
 
   }
@@ -82,7 +74,7 @@
 		<meta name="google" content="notranslate">
 		<!-- THe following is the stylesheet file. The CSS file decides look and feel -->
 		<link rel="stylesheet" type="text/css" href="project.css" />
-	</head>
+	</head>	
 
 	<body>
     <!-- BACK TO LANDING -->
@@ -92,31 +84,26 @@
     <?php
 
     ?>
+    
 
+    <h1> What crimes were committed on this date? </h1>
 
-    <h1> When are crimes committed? </h1>
-
-    <h2> Select a day: </h2>
-
+    <h2> Enter a date: </h2>
 
     <form method="post">
-      <input type="submit" value="Sunday" name="fsunday">
-      <input type="submit" value="Monday" name="fmonday">
-      <input type="submit" value="Tuesday" name="ftuesday">
-      <input type="submit" value="Wednesday" name="fwednesday">
-      <input type="submit" value="Thursday" name="fthursday">
-      <input type="submit" value="Friday" name="ffriday">
-      <input type="submit" value="Saturday" name="fsaturday">
+      <input type="text" name="day" id="id_day" placeholder="dd">
+      <input type="text" name="month" id="id_month" placeholder="mm">
+      <input type="text" name="year" id="id_year" placeholder="yyyy">
+      <input type="submit" name="field_submit" value="Search date:">
     </form>
 
-    <?php
-      if ($daySelected == "none") {
-        ?><h1> No day selected. </h1><?php
-      }else{
-        ?><h1> Showing results for <?php echo $daySelected; ?>:</h1><?php
-        if ($result) { ?>
-          <h2>Results</h2>
-              <table>
+
+    <?php 
+      if ($submitted){
+        if ($validEntry){
+          if ($result) { ?>
+            <h2>Results</h2>
+            <table>
                 <thead>
                   <tr>
                     <th>PdId</th>
@@ -138,13 +125,25 @@
                   <?php } ?>
                 </tbody>
               </table>
-          <?php
+            <?php
+          }else{
+            ?> <h2> No crimes found for <?php echo $total_date ?>.</h2> <?php
+          }
         }else{
-          ?> <h2> Error retrieving rows. </h2> <?php
+          ?><h3>Please enter your data with the correct format [dd][mm][yyyy]. All numbers.</h3><?php
         }
+      }else{
+        
       }
     ?>
 
+    
   </body>
 </html>
+
+
+
+
+
+
 
