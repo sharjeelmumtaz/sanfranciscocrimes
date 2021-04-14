@@ -42,8 +42,10 @@ OWED_Public_Spaces_2_2 VARCHAR(255),
 Neighborhoods_2 VARCHAR(255)
 );
 
-LOAD DATA INFILE 'c:\\wamp64\\tmp\\police-department-incidents.csv'
-INTO TABLE megatable
+# LOAD DATA INFILE 'c:\\wamp64\\tmp\\police-department-incidents.csv'
+LOAD DATA
+    LOCAL INFILE '/Users/jonny/Documents/School/DBMS/project 2/police-department-incidents.csv'
+    INTO TABLE megatable 
 FIELDS TERMINATED BY ','
 ENCLOSED BY '"'
 LINES TERMINATED BY '\n'
@@ -111,6 +113,12 @@ HSOC_Zones_as_of_2018_06_05_2_2 VARCHAR(255),
 OWED_Public_Spaces_2_2 VARCHAR(255)
 );
 
+# We must change sql modes because the table we're working on has broken data,
+# and so we must group it to work around this.
+# Specifically, each entry is duplicated: so for every entry in the megatable,
+# there is another identical entry, including PdId, which is the primary key.
+SET sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
+
 INSERT INTO Description
 SELECT PdId,
 IncidntNum,
@@ -151,7 +159,8 @@ DELETE_Police_Districts_2_2,
 DELETE_Supervisor_Districts_2_2,
 DELETE_Zip_Codes_2_2,
 DELETE_Neighborhoods_2_2
-FROM megatable;
+FROM megatable
+GROUP BY PdId;
 
 INSERT INTO Broken
 SELECT PdId,
@@ -166,7 +175,8 @@ Central_Market_Tenderloin_Boundary_2_2,
 Central_Market_Tenderloin_Boundary_Polygon_Updated_2_2,
 HSOC_Zones_as_of_2018_06_05_2_2,
 OWED_Public_Spaces_2_2
-FROM megatable;
+FROM megatable
+GROUP BY PdId;
 
 SELECT * FROM Crime_Time;
 
