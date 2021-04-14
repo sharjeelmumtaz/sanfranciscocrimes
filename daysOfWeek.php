@@ -7,7 +7,7 @@
   function get_query($query, $var_day){
 
     require_once("conn.php");
-    
+
     $result = "unexecuted";
 
     try
@@ -82,7 +82,7 @@
 		<meta name="google" content="notranslate">
 		<!-- THe following is the stylesheet file. The CSS file decides look and feel -->
 		<link rel="stylesheet" type="text/css" href="project.css" />
-	</head>	
+	</head>
 
 	<body>
     <!-- BACK TO LANDING -->
@@ -92,12 +92,12 @@
     <?php
 
     ?>
-    
+
 
     <h1> When are crimes committed? </h1>
 
     <h2> Select a day: </h2>
-  
+
 
     <form method="post">
       <input type="submit" value="Sunday" name="fsunday">
@@ -119,19 +119,21 @@
               <table>
                 <thead>
                   <tr>
-                    <th>Incident Num</th>
-                    <th>Incident Code</th>
-                    <th>Category</th>
+                    <th>PdId</th>
+                    <th>DayOfWeek</th>
                     <th>Description</th>
+                    <th>Incident_Date</th>
+                    <th>Incident_Time</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($result as $row) { ?>
                     <tr>
-                      <td><?php echo $row["IncidntNum"]; ?></td>
-                      <td><?php echo $row["Incident_Code"]; ?></td>
-                      <td><?php echo $row["Category"]; ?></td>
+                      <td><?php echo $row["PdId"]; ?></td>
+                      <td><?php echo $row["DayOfWeek"]; ?></td>
                       <td><?php echo $row["Descript"]; ?></td>
+                      <td><?php echo $row["Incident_Date"]; ?></td>
+                      <td><?php echo $row["Incident_Time"]; ?></td>
                    </tr>
                   <?php } ?>
                 </tbody>
@@ -142,14 +144,14 @@
         }
       }
     ?>
-    
+
     <?php
       if (isset($_POST['field_submit'])) {
         // If the query executed (result is true) and the row count returned from the query is greater than 0 then...
         if ($result && $prepared_stmt->rowCount() > 0) { ?>
               <!-- first show the header RESULT -->
-              
-  
+
+
         <?php } else { ?>
           <h3>Sorry, no results found for table. </h3>
         <?php }
@@ -158,13 +160,6 @@
     } ?>
 
 
-    
+
   </body>
 </html>
-
-
-
-
-
-
-
