@@ -255,7 +255,8 @@ FROM Description
 	INNER JOIN Location USING (PdId)
     INNER JOIN Crime_Time USING (PdId)
 WHERE X >= minx AND X <= maxx AND Y >= miny AND Y <= maxy
-LIMIT 100;
+ORDER BY Incident_Date DESC, Incident_Time DESC
+LIMIT 50;
 END //
 DELIMITER ;
 
@@ -290,3 +291,58 @@ BEGIN
 	CALL validate_crime(NEW.Incident_Date, NEW.Descript);
 END$$
 DELIMITER ;
+
+
+# Stored procedure that gets crimes by the district they took place in
+DROP PROCEDURE IF EXISTS getCrimesByDistrict;
+DELIMITER //
+CREATE PROCEDURE getCrimesbyDistrict(IN EnteredDistrict VARCHAR(255))
+BEGIN
+SELECT * 
+FROM Location
+WHERE PdDistrict = EnteredDistrict
+LIMIT 100;
+END //
+DELIMITER ;
+
+# Testing the location
+CALL getCrimesByDistrict('Bayview');
+
+# Stored Procedure that gets the crimes by a certain category
+
+DROP PROCEDURE IF EXISTS getCrimesByCategory;
+DELIMITER //
+CREATE PROCEDURE getCrimesbyCategory(IN EnteredCategory VARCHAR(255))
+BEGIN
+SELECT * 
+FROM Description
+WHERE Category = EnteredCategory
+LIMIT 100;
+END //
+DELIMITER ;
+
+# Testing the location
+CALL getCrimesByCategory('DRUG/NARCOTIC');
+
+
+DROP PROCEDURE IF EXISTS deleteByPdId;
+DELIMITER //
+CREATE PROCEDURE deleteByPdId(IN id BIGINT)
+BEGIN
+	SELECT *
+    FROM Description
+    WHERE id=PdId;
+	DELETE FROM Broken
+	WHERE id = PdId;
+    DELETE FROM Crime_Time
+	WHERE id = PdId;
+    DELETE FROM Description
+	WHERE id = PdId;
+    DELETE FROM Location
+	WHERE id = PdId;
+    DELETE FROM Other
+	WHERE id = PdId;
+END //
+DELIMITER ;
+
+CALL deleteByPdId(18036083516710);
