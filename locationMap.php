@@ -10,24 +10,30 @@
 
     $result = "unexecuted";
 
-    try
-    {
-      $prepared_stmt = $dbo->prepare($query);
-
-      // INSERT VARIABLE INTO SQL QUERY
-      $prepared_stmt->bindValue(':minx', $minlong, PDO::PARAM_STR);
-      $prepared_stmt->bindValue(':maxx', $maxlong, PDO::PARAM_STR);
-      $prepared_stmt->bindValue(':miny', $minlat, PDO::PARAM_STR);
-      $prepared_stmt->bindValue(':maxy', $maxlat, PDO::PARAM_STR);
-
-      $prepared_stmt->execute();
-      // Fetch all the values based on query and save that to variable $result
-      $result = $prepared_stmt->fetchAll();
-    }
-    catch (PDOException $ex)
-    { // Error in database processing.
-      echo $sql . "<br>" . $error->getMessage(); // HTTP 500 - Internal Server Error
-      $result = "failure";
+    if ($minlat > $maxlat){
+      $result = "Minimum latitude must be less than maximum latitude.";
+    }else if ($minlong > $maxlong){
+      $result = "Minimum longitude must be less than maximum longitude.";
+    }else{
+      try
+      {
+        $prepared_stmt = $dbo->prepare($query);
+  
+        // INSERT VARIABLE INTO SQL QUERY
+        $prepared_stmt->bindValue(':minx', $minlong, PDO::PARAM_STR);
+        $prepared_stmt->bindValue(':maxx', $maxlong, PDO::PARAM_STR);
+        $prepared_stmt->bindValue(':miny', $minlat, PDO::PARAM_STR);
+        $prepared_stmt->bindValue(':maxy', $maxlat, PDO::PARAM_STR);
+  
+        $prepared_stmt->execute();
+        // Fetch all the values based on query and save that to variable $result
+        $result = $prepared_stmt->fetchAll();
+      }
+      catch (PDOException $ex)
+      { // Error in database processing.
+        echo $sql . "<br>" . $error->getMessage(); // HTTP 500 - Internal Server Error
+        $result = "failure";
+      }
     }
 
     return $result;
@@ -134,20 +140,25 @@
         </div>
       </form>
       
-      <img src="region.png" alt="Map" width=100%%>
+      <img src="region5.png" alt="Map" width=100%%>
     <div>
 
     <?php
       if (isset($result)){
         if ($result == "failure") {
           ?><h1>Unable to retrieve rows.</h1><?php
-        }else{
+        }else if ($result == "Minimum latitude must be less than maximum latitude."){
+          ?><h2><?php echo $result; ?></h2><?php 
+        }else if ($result == "Minimum longitude must be less than maximum longitude."){
+          ?><h2><?php echo $result; ?></h2><?php 
+        }else {
           ?><h1> Showing results:</h1><?php
           if ($result) { ?>
             <h2>Results</h2>
                 <table>
                   <thead>
                     <tr>
+                      <th>PdId</th>
                       <th>Category</th>
                       <th>Description</th>
                       <th>Resolution</th>
@@ -162,6 +173,7 @@
                   <tbody>
                     <?php foreach ($result as $row) { ?>
                       <tr>
+                        <td><?php echo $row["PdId"]; ?></td>
                         <td><?php echo $row["Category"]; ?></td>
                         <td><?php echo $row["Descript"]; ?></td>
                         <td><?php echo $row["Resolution"]; ?></td>

@@ -57,6 +57,10 @@ ini_set('memory_limit', '-1'); #Memory limit has been disabled
       $result = get_query("CALL getCrimesByDistrict(:dist)", "Mission");
       $distSelected = "Mission";
     }
+    if (isset($_POST['fNorthern'])){
+      $result = get_query("CALL getCrimesByDistrict(:dist)", "Northern");
+      $distSelected = "Northern";
+    }
     if (isset($_POST['fPark'])){
       $result = get_query("CALL getCrimesByDistrict(:dist)", "Park");
       $distSelected = "Park";

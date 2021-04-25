@@ -90,6 +90,11 @@
 
     <h2> Enter a date: </h2>
 
+    <div>
+      <body> Results range from 01-01-2003 to 15-05-2018 (dd-mm-yyyy) </body>
+    </div>
+    <br></br>
+
     <form method="post">
       <input type="text" name="day" id="id_day" placeholder="dd">
       <input type="text" name="month" id="id_month" placeholder="mm">
@@ -102,7 +107,7 @@
       if ($submitted){
         if ($validEntry){
           if ($result) { ?>
-            <h2>Results</h2>
+            <h2>Showing crimes for <?php echo $total_date ?>:</h2>
             <table>
                 <thead>
                   <tr>
