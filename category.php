@@ -53,9 +53,9 @@ ini_set('memory_limit', '-1'); #Memory limit has been disabled
       $result = get_query("CALL getCrimesByCategory(:cat)", "WARRANTS");
       $catSelected = "WARRANTS";
     }
-    if (isset($_POST['fSEX OFFENSES'])){
-      $result = get_query("CALL getCrimesByCategory(:cat)", "SEX OFFENSES");
-      $catSelected = "SEX OFFENSES";
+    if (isset($_POST['fVANDALISM'])){
+      $result = get_query("CALL getCrimesByCategory(:cat)", "VANDALISM");
+      $catSelected = "VANDALISM";
     }
     if (isset($_POST['fFORGERY/COUNTERFEITING'])){
       $result = get_query("CALL getCrimesByCategory(:cat)", "FORGERY/COUNTERFEITING");
@@ -67,15 +67,15 @@ ini_set('memory_limit', '-1'); #Memory limit has been disabled
     }
     if (isset($_POST['fNON-CRIMINAL'])){
       $result = get_query("CALL getCrimesByCategory(:cat)", "NON-CRIMINAL");
-      $catSelected = "Taraval";
+      $catSelected = "NON-CRIMINAL";
     }
     if (isset($_POST['fLARCENY/THEFT'])){
       $result = get_query("CALL getCrimesByCategory(:cat)", "LARCENY/THEFT");
       $catSelected = "LARCENY/THEFT";
     }
-    if (isset($_POST['fMISSING PERSON'])){
-      $result = get_query("CALL getCrimesByCategory(:cat)", "MISSING PERSON");
-      $catSelected = "MISSING PERSON";
+    if (isset($_POST['fASSAULT'])){
+      $result = get_query("CALL getCrimesByCategory(:cat)", "ASSAULT");
+      $catSelected = "ASSAULT";
     }
 
   }
@@ -107,12 +107,12 @@ ini_set('memory_limit', '-1'); #Memory limit has been disabled
     <form method="post">
       <input type="submit" value="DRUG/NARCOTIC" name="fDRUG/NARCOTIC">
       <input type="submit" value="WARRANTS" name="fWARRANTS">
-      <input type="submit" value="SEX OFFENSES" name="fSEX OFFENSES">
+      <input type="submit" value="VANDALISM" name="fVANDALISM">
       <input type="submit" value="FORGERY/COUNTERFEITING" name="fFORGERY/COUNTERFEITING">
       <input type="submit" value="KIDNAPPING" name="fKIDNAPPING">
       <input type="submit" value="NON-CRIMINAL" name="fNON-CRIMINAL">
       <input type="submit" value="LARCENY/THEFT" name="fLARCENY/THEFT">
-      <input type="submit" value="MISSING PERSON" name="fMISSING PERSON">
+      <input type="submit" value="ASSAULT" name="fASSAULT">
     </form>
 
     <?php
